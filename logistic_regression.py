@@ -14,15 +14,18 @@ class LogisticRegressionEP34:
 
     def init_parameters(self, feature_dim):
         self.w = np.random.randn(feature_dim) * 0.1
-        self.b = np.random.randn() * 0.1
+        self.b = np.random.randn() * 0.1 #or = 0
 
     def forward(self, X):
         z = X @ self.w + self.b
-        self.f = 1 / (1 + np.exp(-z))
+        z = np.clip(z, -500, 500)
+        self.f = np.power(1 + np.exp(-z), -1)
 
     def predict(self, X):
         z = X @ self.w + self.b
-        return 1 / (1 + np.exp(-z))
+        z = np.clip(z, -500, 500)
+        return np.power(1 + np.exp(-z), -1)
+
 
     def loss(self, X, y):
         self.prediction = self.predict(X)
@@ -30,9 +33,9 @@ class LogisticRegressionEP34:
         return -np.mean(y * np.log(self.prediction + epsilon) + (1 - y) * np.log(1 - self.prediction + epsilon))
 
     def backward(self, X, y):
-        self.prediction = self.predict(X)
-        self.dw = --1 / self.N * X.T @ (y - self.prediction)
-        self.db = -1 / self.N * np.sum(y - self.prediction)
+        error = self.f - y
+        self.dw = X.T @ error / len(y)
+        self.db = np.mean(error)
 
     def step(self):
         self.w = self.w - self.lr * self.dw
