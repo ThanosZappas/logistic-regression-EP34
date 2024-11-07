@@ -7,7 +7,7 @@ from logistic_regression import LogisticRegressionEP34
 X, y = generate_binary_problem(centers=np.array([(0,4),(0,4)]), N=1000)
 
 # Split dataset into training (70%) and testing (30%) sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=50)
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.70, random_state=50)
 
 # Initialize the LogisticRegressionEP34 model
 model = LogisticRegressionEP34()
